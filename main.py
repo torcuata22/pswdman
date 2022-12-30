@@ -1,8 +1,29 @@
 from tkinter import *
+import random
 from tkinter import messagebox
 #messagebox is a module of code, not a class! (it's not imported with *)
 
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
+# PASSWORD GENERATOR
+
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+    print("Welcome to the PyPassword Generator!")
+    nr_letters = random.randint(8,10)
+    nr_symbols = random.randint(2,4)
+    nr_numbers = random.randint(2,4)
+
+    password_letters = [random.choice(letters) for _ in range(nr_letters-1)]
+    password_symbols = [random.choice(symbols) for _ in range(nr_symbols-1)]
+    password_numbers = [random.choice(numbers) for _ in range(nr_numbers-1)]
+
+    password_list = password_letters + password_symbols + password_numbers
+    random.shuffle(password_list)
+    #use join method to create password:
+    password = "".join(password_list)
+    password_entry.insert(0, password)
 
 
 
@@ -13,22 +34,18 @@ def save():
     email = email_entry.get()
     password = password_entry.get()
 
-    #create message box to confirm user is happy with password:
-    #messagebox.showinfo(title="Title", message="Message")
-    #messagebox.askyesno(title,message, options)
-    #messagebox.askquestion(title, message, options)
-    #messagebox.yesnocancel(title, message, options)
+    if len(website) == 0 or len(email)==0 or len(password)==0:
+        messagebox.showinfo(title="Oops", message="Please make sure you filled out all fields")
+    else:
+        is_ok = messagebox.askokcancel(title=website, message=f"This is the information you entered:\n website: {website}\n email: {email}\n password: {password}\n Is it ok to save?")
+        if is_ok:
+            with open("data.txt", "a") as data_file:
+                data_file.write(f"website: {website} | email: {email} | password: {password} \n")
+            website_entry.delete(0, END) #(0, END) deletes all text in widget 
+            #email_entry.delete(0, END)
+            password_entry.delete(0,END)
 
-    messagebox.askokcancel(title=website, message=f"This is the information you entered: \n website: {website}\n email: {email}\n password: {password}\n Is it ok to save?")
 
-
-
-
-    with open("data.txt", "a") as data_file:
-        data_file.write(f"website: {website} | email: {email} | password: {password} \n")
-    website_entry.delete(0, END) #(0, END) deletes all text in widget 
-    #email_entry.delete(0, END)
-    password_entry.delete(0,END)
 
 # UI SETUP
 window = Tk()
@@ -54,7 +71,7 @@ email_label.grid(column=0, row=2)
 password_label = Label(text="Password: ",)
 password_label.grid(column=0, row=3)
 
-generate_password_button = Button(text="Generate Password")
+generate_password_button = Button(text="Generate Password", command=generate_password)
 generate_password_button.grid(column=2, row=3)
 
 add_button = Button(text="Add", width=17, command = save) 
@@ -62,11 +79,11 @@ add_button.grid(column=1, row=4)
 
 #Entries:
 website_entry = Entry()
-website_entry.grid(column=1, row=1)# columnspan=2)
+website_entry.grid(column=1, row=1)# columnspan=2
 website_entry.focus() #makes cursornappear on "website" entry
 
 email_entry = Entry()
-email_entry.grid(column=1, row=2)# columnspan=2)
+email_entry.grid(column=1, row=2)# columnspan=2
 email_entry.insert(0, "marilynmarquez@email.com") #prefills email field, 0 is 0-index, if I wasnt to add at the end, use END
 
 password_entry = Entry()
