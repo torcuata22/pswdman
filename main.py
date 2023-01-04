@@ -74,13 +74,19 @@ def save():
 
 def find_password():
     website = website_entry.get()
-    #search through data.json:
-    with open("data.json") as data_file:
-        data = json.load(data_file)
+    try:
+        #search through data.json:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No data file found")
+
+    else:
         if website in data:
             email = data[website]["email"] #BECAUSE DATA IS  A NESTED DICTIONARY
             password = data[website]["password"]
             messagebox.showinfo(title=website, message=f"Email: {email}\n Password: {password}")
+
 
 
 # UI SETUP
