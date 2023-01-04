@@ -86,7 +86,8 @@ def find_password():
             email = data[website]["email"] #BECAUSE DATA IS  A NESTED DICTIONARY
             password = data[website]["password"]
             messagebox.showinfo(title=website, message=f"Email: {email}\n Password: {password}")
-
+        else:
+            messagebox.showinfo(title="Error", message=f"There is no password saved for {website} ")
 
 
 # UI SETUP
